@@ -19,3 +19,5 @@ new Vue({
     store,
     components: {App}
 })
+
+// Vue.http.headers['X-Api-Key'] = 'fa1a73acf8c142ac9e98f05fce988e6e'
