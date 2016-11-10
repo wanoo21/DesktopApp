@@ -1,3 +1,5 @@
+var bourbon = require('bourbon').includePaths;
+var bourbonNeat = require('bourbon-neat').includePaths;
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = function (options) {
@@ -29,7 +31,7 @@ module.exports = function (options) {
     postcss: generateLoaders(['css']),
     less: generateLoaders(['css', 'less']),
     sass: generateLoaders(['css', 'sass?indentedSyntax']),
-    scss: generateLoaders(['css', 'sass']),
+    scss: generateLoaders(['css', 'sass?includePaths[]=' + bourbon + '&includePaths[]=' + bourbonNeat ]),
     stylus: generateLoaders(['css', 'stylus']),
     styl: generateLoaders(['css', 'stylus'])
   }

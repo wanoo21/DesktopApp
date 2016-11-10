@@ -1,37 +1,48 @@
 <template>
-  <div id="app">
-    <articles></articles>
-  </div>
+    <div id="app">
+        <sidebar></sidebar>
+        <content></content>
+    </div>
 </template>
 
+<style lang="scss">
+    @import "neat";
+    @import "./scss/variables";
+    body {
+        margin: 0;
+        padding: 0;
+        #app {
+            height: 100vh;
+            display: flex;
+            @include outer-container(100%);
+            aside {
+                @include span-columns(4);
+                max-width: 250px;
+                @include media($mobile) {
+                    @include span-columns(3);
+                }
+            }
+            content {
+                @include pad();
+                @include span-columns(8);
+                @include omega();
+                @include media($mobile) {
+                    @include span-columns(8);
+                }
+            }
+        }
+    }
+</style>
+
 <script>
-  import Articles from './components/articles'
+  import sidebar from './components/sidebar'
+  import content from './components/content'
 
   export default {
     components: {
-      Articles
+      sidebar,
+      content
     }
   }
-</script>
 
-<style>
-  html {
-    height: 100%;
-  }
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-  #app {
-    margin-top: -100px;
-    max-width: 600px;
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-  }
-  .logo {
-    width: 100px;
-    height: 100px
-  }
-</style>
+</script>
