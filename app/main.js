@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
+import moment from 'moment'
 
 Vue.use(Vuex)
 Vue.use(require('vue-resource'))
@@ -39,4 +40,6 @@ new Vue({
     components: {App}
 })
 
-// Vue.http.headers['X-Api-Key'] = 'fa1a73acf8c142ac9e98f05fce988e6e'
+Vue.filter('dateFromNow', function (value) {
+    return moment(value).fromNow()
+})

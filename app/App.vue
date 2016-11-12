@@ -8,27 +8,24 @@
 <style lang="scss">
     @import "neat";
     @import "./scss/variables";
+    @import url('https://fonts.googleapis.com/css?family=Roboto');
     body {
         margin: 0;
         padding: 0;
+        font-family: 'Roboto', sans-serif;
+        overflow: hidden;
+        color: $primaryDark;
         #app {
             height: 100vh;
             display: flex;
-            @include outer-container(100%);
+            background-color: $primaryLight;
             aside {
-                @include span-columns(4);
-                max-width: 250px;
-                @include media($mobile) {
-                    @include span-columns(3);
-                }
+                width: 230px;
+                min-width: 200px;
+                margin-right: 25px;
             }
-            content {
-                @include pad();
-                @include span-columns(8);
-                @include omega();
-                @include media($mobile) {
-                    @include span-columns(8);
-                }
+            main {
+                flex: 1;
             }
         }
     }

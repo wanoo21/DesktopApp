@@ -1,2 +1,21 @@
-$primaryBrown: #395A80;
-$mobile: new-breakpoint(max-width 500px 4);
+$primaryDark: #0B2545;
+$secondDark: #13315C;
+$thirdDark: #134074;
+$secondLight: #8DA9C4;
+$primaryLight: #EEE5E9;
+
+@mixin res-media($media) {
+    @if($media == laptop) {
+        @media screen
+        and (min-device-width: 1200px)
+        and (max-device-width: 1600px)
+        and (-webkit-min-device-pixel-ratio: 1) { @content }
+    }
+    @else if($media == laptop-retina) {
+        @media screen
+        and (min-device-width: 1200px)
+        and (max-device-width: 1600px)
+        and (-webkit-min-device-pixel-ratio: 2)
+        and (min-resolution: 192dpi) { @content }
+    }
+}
