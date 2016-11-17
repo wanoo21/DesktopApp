@@ -57,6 +57,7 @@
                 color: darken($primaryDark, 2);
                 a {
                     color: inherit;
+                    outline: none;
                     @include transition(all .2s ease-in);
                     &:hover {
                         color: darken($primaryDark, 5);

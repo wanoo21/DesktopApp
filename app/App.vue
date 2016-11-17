@@ -2,6 +2,7 @@
     <div id="app">
         <sidebar></sidebar>
         <content></content>
+        <modal></modal>
     </div>
 </template>
 
@@ -34,11 +35,13 @@
 <script>
   import sidebar from './components/sidebar'
   import content from './components/content'
+  import modal from './directives/modal'
 
   export default {
     components: {
       sidebar,
-      content
+      content,
+      modal
     }
   }
 

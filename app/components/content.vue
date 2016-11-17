@@ -3,7 +3,10 @@
         <header>
             <div id="filters">
                 <ul>
-                    <li>Top</li>
+                    <li @click="modal.show({
+                    title: 'Custom title',
+                    body: 'Some template'
+                })">Top</li>
                     <li class="active">Latest</li>
                     <li>Popular</li>
                 </ul>
@@ -24,7 +27,7 @@
                                 <i class="fa fa-link" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <img src="{{item.urlToImage}}" alt="{{item.title}}">
+                        <img :src="item.urlToImage" alt="{{item.title}}">
                     </div>
                     <div class="item-footer">
                         <p>{{item.title}}</p>
@@ -169,6 +172,9 @@
         computed: {
             items () {
                 return this.$store.state.articles
+            },
+            modal () {
+                return this.$store.state.modal
             }
         },
         methods: {
