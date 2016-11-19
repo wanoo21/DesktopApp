@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" v-if="showModal">
+    <div class="modal" v-if="showModal" transition="fade">
         <div class="modal-content">
             <h3 class="modal-content-title">
                 <span>{{title}}</span>
@@ -14,7 +14,6 @@
 
 <style scoped lang="scss">
     @import "../scss/variables";
-    @import "bourbon";
 
     .modal {
         position: fixed;
@@ -27,10 +26,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
-        &.hidden {
-            @include display(none)
-        }
 
         &-content {
             width: 50%;

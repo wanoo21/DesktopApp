@@ -3,10 +3,7 @@
         <header>
             <div id="filters">
                 <ul>
-                    <li @click="modal.show({
-                    title: 'Custom title',
-                    body: 'Some template'
-                })">Top</li>
+                    <li>Top</li>
                     <li class="active">Latest</li>
                     <li>Popular</li>
                 </ul>
@@ -17,7 +14,7 @@
         </div>
         <content>
             <div id="items">
-                <div v-for="item in items | orderBy 'publishedAt' -1" class="item">
+                <div v-for="item in articles | orderBy 'publishedAt' -1" class="item">
                     <div class="item-header">
                         <span>{{item.publishedAt | dateFromNow}} by {{item.author}}</span>
                     </div>
@@ -39,8 +36,6 @@
 </template>
 
 <style lang="scss">
-    @import "neat";
-    @import "bourbon";
     @import "../scss/variables";
 
     main {
@@ -81,7 +76,7 @@
             align-content: center;
             #items {
                 @include outer-container(100%);
-                padding: 10px;
+                padding: 1px;
                 .item {
                     position: relative;
                     @include span-columns(3);
@@ -170,11 +165,8 @@
 <script>
     export default {
         computed: {
-            items () {
+            articles () {
                 return this.$store.state.articles
-            },
-            modal () {
-                return this.$store.state.modal
             }
         },
         methods: {

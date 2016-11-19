@@ -2,9 +2,18 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
 import moment from 'moment'
+import underscore from 'underscore'
 
 Vue.use(Vuex)
+Vue.use(underscore)
 Vue.use(require('vue-resource'))
+
+// Vue.http.interceptors.push((request, next) => {
+//     next((response) => {
+//         console.log(response)
+//         return response.json().body
+//     })
+// })
 
 const store = new Vuex.Store({
     state: {
@@ -31,7 +40,9 @@ new Vue({
         headers: {
             'X-Api-Key': 'fa1a73acf8c142ac9e98f05fce988e6e'
         },
-        progress: event => {}
+        progress: event => {
+            console.log('Percent %s%', Math.round(event.loaded * 100 / event.total))
+        }
     },
     created () {
       this.$store.state.newsResource = this.$resource('https://newsapi.org/v1', {}, customActions)
