@@ -1,22 +1,40 @@
 <template>
-    <main>
+    <aside>
         <header>
-            <div id="filters">
-                <ul>
-                    <li>Top</li>
-                    <li class="active">Latest</li>
-                    <li>Popular</li>
-                </ul>
+            <div class="logo">
+                LOGO
             </div>
+            <nav>
+                <ul>
+                    <li @click="getArticles(source)" :class="{active: selectedSource.id == source.id}" v-for="source in sources">
+                        <span>{{source.name}}</span>
+                    </li>
+                </ul>
+            </nav>
         </header>
+        <footer>
+            <p class="cp">News source from <a target="_blank" class="js-external-link" href="http://newsapi.org">NewsAPI</a></p>
+        </footer>
+    </aside>
+    <main>
+        <!--<header>-->
+            <!--<div id="filters">-->
+                <!--<ul>-->
+                    <!--<li>Top</li>-->
+                    <!--<li class="active">Latest</li>-->
+                    <!--<li>Popular</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</header>-->
         <div id="breadcrumbs">
-            <h1>Title of source or category</h1>
+            <h1>{{selectedSource.name}}</h1>
+            <p v-if="selectedSource.description">{{selectedSource.description}}</p>
         </div>
         <content>
             <div id="items">
                 <div v-for="item in articles | orderBy 'publishedAt' -1" class="item">
                     <div class="item-header">
-                        <span>{{item.publishedAt | dateFromNow}} by {{item.author}}</span>
+                        <span v-if="item.publishedAt">{{item.publishedAt | dateFromNow}}</span> <span v-if="item.author">by {{item.author}}</span>
                     </div>
                     <div class="item-poster">
                         <div class="item-poster-cover" @click="openLink(item.url)">
@@ -38,10 +56,80 @@
 <style lang="scss">
     @import "../scss/variables";
 
+    aside {
+        min-width: rem(200);
+        background: $secondDark;
+        @include display(flex);
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        @include span-columns(3 of 12);
+        header {
+            width: 100%;
+            .logo {
+                height: 90px;
+                color: $secondLight;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #items-search {
+                input {
+                    width: 100%;
+                    padding: 10px 15px;
+                    border: none;
+                    outline: none;
+                    font-size: 18px;
+                }
+            }
+            nav {
+                overflow-x: auto;
+                max-height: calc(100vh - 150px);
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    li {
+                        padding: 15px;
+                        cursor: pointer;
+                        color: $primaryLight;
+                        text-transform: uppercase;
+                        display: flex;
+                        align-items: center;
+                        @include transition(background .2s ease-in-out);
+                        &:hover, &.active {
+                            background: $primaryDark;
+                        }
+                        img {
+                            width: 25px;
+                            margin-right: 5px;
+                        }
+                        span { }
+                    }
+                }
+            }
+        }
+        footer {
+            p.cp {
+                font-size: 15px;
+                color: darken($primaryDark, 2);
+                a {
+                    color: inherit;
+                    outline: none;
+                    @include transition(all .2s ease-in);
+                    &:hover {
+                        color: darken($primaryDark, 5);
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
     main {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        @include span-columns(9 of 12);
         header {
             #filters {
                 ul {
@@ -68,6 +156,14 @@
                 }
             }
         }
+        #breadcrumbs {
+            h1 {
+                color: $primaryDark;
+            }
+            p {
+                color: lighten($primaryDark, 20);
+            }
+        }
         content {
             flex: 1;
             overflow-x: hidden;
@@ -75,22 +171,11 @@
             display: flex;
             align-content: center;
             #items {
-                @include outer-container(100%);
-                padding: 1px;
+                padding: rem(1);
                 .item {
                     position: relative;
-                    @include span-columns(3);
+                    @include span-columns(2 of 8);
                     @include omega(4n);
-                    @include res-media(laptop) {
-                        @include span-columns(6);
-                        @include omega(2n);
-                    }
-                    @include res-media(laptop-retina) {
-                        @include span-columns(4);
-                        @include omega(3n);
-                    }
-                    margin-right: 15px;
-                    float: left;
                     border-radius: 3px;
                     box-shadow: 0 0 1px $secondDark;
                     margin-bottom: 15px;
@@ -167,11 +252,27 @@
         computed: {
             articles () {
                 return this.$store.state.articles
+            },
+            sources () {
+                return this.$store.state.sources
+            },
+            selectedSource () {
+                return this.$store.state.selectedSource
             }
         },
         methods: {
             openLink (url) {
                 window.open(url, true)
+            },
+            getArticles (source) {
+                this.$store.state.newsResource.getArticles({
+                    source: source.id
+                }).then((res) => {
+                    if (res.body.status === 'ok') {
+                        this.$store.state.articles = res.body.articles
+                        this.$store.state.selectedSource = source
+                    }
+                })
             }
         }
     }

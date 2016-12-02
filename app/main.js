@@ -18,7 +18,10 @@ Vue.use(require('vue-resource'))
 const store = new Vuex.Store({
     state: {
         sources: [],
-        articles: []
+        selectedSource: {},
+        articles: [],
+        category: [],
+        currentView: 'sources'
     }
 })
 

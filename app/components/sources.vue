@@ -2,15 +2,15 @@
     <main>
         <header>
             <div id="input-filter">
-                <input type="search" v-model="filterSources" placeholder="Search in sources">
+                <input type="search" autofocus v-model="filterSources" placeholder="Filter all {{sourcesCount}} sources">
             </div>
         </header>
         <content>
             <div id="sources">
-                <div v-for="source in sources | filterBy filterSources 'name'" transition="fade" class="source">
+                <div v-for="source in sources | filterBy filterSources 'name'" class="source">
                     <div class="source-content">
                         <img :src="source.urlsToLogos.medium">
-                        <div class="source-cover">
+                        <div class="source-cover" @click="getArticles(source)">
                             <button>
                                 <i class="fa fa-newspaper-o" aria-hidden="true"></i>
                             </button>
@@ -26,13 +26,14 @@
     @import "../scss/variables";
 
     main {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
         header {
+            width: 100%;
+            padding: 0;
             #input-filter {
-                padding-right: 10px;
-                margin: 20px 0 10px;
+                padding: 2rem;
                 input {
                     width: 100%;
                     border-radius: 3px;
@@ -52,20 +53,11 @@
             overflow-x: hidden;
             overflow-y: auto;
             #sources {
-                padding: 1px;
+                padding: rem(1) 2rem;
                 .source {
-                    @include span-columns(3);
-                    @include omega(4n);
-                    @include res-media(laptop) {
-                        @include span-columns(6);
-                        @include omega(2n);
-                    }
-                    @include res-media(laptop-retina) {
-                        @include span-columns(4);
-                        @include omega(3n);
-                    }
+                    @include span-columns(1 of 5);
+                    @include omega(5n);
                     height: 150px;
-                    margin-right: 15px;
                     border-radius: 3px;
                     box-shadow: 0 0 1px $secondDark;
                     margin-bottom: 15px;
@@ -137,6 +129,31 @@
         computed: {
             sources () {
                 return this.$store.state.sources
+            },
+            sourcesCount () {
+                return this.$store.state.sources.length
+            },
+            categories () {
+                var categories = []
+                this.$store.state.sources.forEach(source => {
+                    if (categories.indexOf(source.category) === -1) {
+                        categories.push(source.category)
+                    }
+                })
+                return categories
+            }
+        },
+        methods: {
+            getArticles (source) {
+                this.$store.state.newsResource.getArticles({
+                    source: source.id
+                }).then((res) => {
+                    if (res.body.status === 'ok') {
+                        this.$store.state.articles = res.body.articles
+                        this.$store.state.currentView = 'articles'
+                        this.$store.state.selectedSource = source
+                    }
+                })
             }
         }
     }
