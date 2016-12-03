@@ -2,12 +2,23 @@
     <main>
         <header>
             <div id="input-filter">
-                <input type="search" autofocus v-model="filterSources" placeholder="Filter all {{sourcesCount}} sources">
+                <div class="btn-group">
+                    <button class="active">News</button>
+                    <button>Currency</button>
+                    <button>Weather</button>
+                </div>
+                <input type="search" :disabled='!sources' autofocus v-model="filterSources" placeholder="Filter all sources.">
+                <label>
+                    <select @change="selectCategory()" v-model="selectedCategory" :disabled='!sources'>
+                        <option :selected="!selectedCategory.length" value="">All</option>
+                        <option :selected="selectedCategory == category" v-for="category in categories">{{category}}</option>
+                    </select>
+                </label>
             </div>
         </header>
         <content>
             <div id="sources">
-                <div v-for="source in sources | filterBy filterSources 'name'" class="source">
+                <div v-for="source in sources | filterBy selectedCategory 'category' | filterBy filterSources 'name'" class="source">
                     <div class="source-content">
                         <img :src="source.urlsToLogos.medium">
                         <div class="source-cover" @click="getArticles(source)">
@@ -34,9 +45,13 @@
             padding: 0;
             #input-filter {
                 padding: 2rem;
+                @include display(flex);
+                @include justify-content(space-between);
+                flex: 1;
                 input {
-                    width: 100%;
-                    border-radius: 3px;
+                    @include flex(1);
+                    border-radius: 3px 0 0 3px;
+                    margin-right: rem(5);
                     padding: 10px;
                     border: none;
                     outline: none;
@@ -44,6 +59,43 @@
                     @include transition(all .2s ease-in-out);
                     &:hover {
                         box-shadow: 0 0 3px $thirdDark;
+                    }
+                }
+                label {
+                    min-width: 15%;
+                    select {
+                        width: 100%;
+                        padding: 10px;
+                        outline: none;
+                        border: none;
+                        background-color: white;
+                        border-radius: 0 3px 3px 0;
+                        box-shadow: 0 0 1px $secondDark;
+                        text-transform: capitalize;
+                        cursor: pointer;
+                    }
+                }
+                .btn-group {
+                    margin-right: rem(5);
+                    @include display(table);
+                    button {
+                        background-color: $secondDark;
+                        border: none;
+                        outline: none;
+                        color: $primaryLight;
+                        margin-top: -1px;
+                        padding: 12px 25px;
+                        cursor: pointer;
+                        @include transition(background .2s ease-in-out);
+                        &:first-child {
+                            border-radius: 3px 0 0 3px;
+                        }
+                        &:last-child {
+                            border-radius: 0 3px 3px 0;
+                        }
+                        &:hover, &.active {
+                            background: $primaryDark;
+                        }
                     }
                 }
             }
@@ -54,6 +106,7 @@
             overflow-y: auto;
             #sources {
                 padding: rem(1) 2rem;
+                width: 100%;
                 .source {
                     @include span-columns(1 of 5);
                     @include omega(5n);
@@ -123,15 +176,14 @@
     export default {
         data () {
             return {
-                filterSources: ''
+                filterSources: '',
+                selectedCategory: '',
+                filteredSources: []
             }
         },
         computed: {
             sources () {
                 return this.$store.state.sources
-            },
-            sourcesCount () {
-                return this.$store.state.sources.length
             },
             categories () {
                 var categories = []
@@ -142,6 +194,9 @@
                 })
                 return categories
             }
+        },
+        ready () {
+            this.selectedCategory = this.$store.state.selectedCategory
         },
         methods: {
             getArticles (source) {
@@ -154,6 +209,9 @@
                         this.$store.state.selectedSource = source
                     }
                 })
+            },
+            selectCategory () {
+                this.$store.state.selectedCategory = this.selectedCategory
             }
         }
     }

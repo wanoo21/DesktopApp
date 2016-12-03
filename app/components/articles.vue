@@ -1,20 +1,21 @@
 <template>
     <aside>
         <header>
-            <div class="logo">
-                LOGO
-            </div>
+            <div class="logo"> LOGO </div>
+            <button @click="returnToSources()">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp; Back to all sources
+            </button>
             <nav>
                 <ul>
-                    <li @click="getArticles(source)" :class="{active: selectedSource.id == source.id}" v-for="source in sources">
+                    <li @click="getArticles(source)" :class="{active: selectedSource.id == source.id}" v-for="source in sources | filterBy selectedCategory 'category'">
                         <span>{{source.name}}</span>
                     </li>
                 </ul>
             </nav>
         </header>
-        <footer>
-            <p class="cp">News source from <a target="_blank" class="js-external-link" href="http://newsapi.org">NewsAPI</a></p>
-        </footer>
+        <!--<footer>-->
+            <!--<p class="cp">News source from <a target="_blank" class="js-external-link" href="http://newsapi.org">NewsAPI</a></p>-->
+        <!--</footer>-->
     </aside>
     <main>
         <!--<header>-->
@@ -27,7 +28,7 @@
             <!--</div>-->
         <!--</header>-->
         <div id="breadcrumbs">
-            <h1>{{selectedSource.name}}</h1>
+            <h1>{{selectedSource.name}} <small><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{selectedCategory || 'All'}}</small></h1>
             <p v-if="selectedSource.description">{{selectedSource.description}}</p>
         </div>
         <content>
@@ -57,7 +58,7 @@
     @import "../scss/variables";
 
     aside {
-        min-width: rem(200);
+        max-width: rem(300);
         background: $secondDark;
         @include display(flex);
         flex-direction: column;
@@ -82,15 +83,31 @@
                     font-size: 18px;
                 }
             }
+            button {
+                padding: rem(15);
+                cursor: pointer;
+                color: $primaryLight;
+                text-transform: uppercase;
+                width: 100%;
+                border: rem(1) solid darken($primaryDark, 3);
+                border-left: none;
+                border-right: none;
+                background: transparent;
+                @include transition(background .2s ease-in-out);
+                outline: none;
+                &:hover {
+                    background: darken($primaryDark, 1);
+                }
+            }
             nav {
                 overflow-x: auto;
-                max-height: calc(100vh - 150px);
+                max-height: calc(100vh - 137px);
                 ul {
                     list-style: none;
                     padding: 0;
                     margin: 0;
                     li {
-                        padding: 15px;
+                        padding: rem(15);
                         cursor: pointer;
                         color: $primaryLight;
                         text-transform: uppercase;
@@ -159,6 +176,11 @@
         #breadcrumbs {
             h1 {
                 color: $primaryDark;
+                small {
+                    color: #ccc;
+                    font-size: rem(18);
+                    text-transform: capitalize;
+                }
             }
             p {
                 color: lighten($primaryDark, 20);
@@ -258,6 +280,9 @@
             },
             selectedSource () {
                 return this.$store.state.selectedSource
+            },
+            selectedCategory () {
+                return this.$store.state.selectedCategory
             }
         },
         methods: {
@@ -273,6 +298,9 @@
                         this.$store.state.selectedSource = source
                     }
                 })
+            },
+            returnToSources () {
+                this.$store.state.currentView = 'sources'
             }
         }
     }
