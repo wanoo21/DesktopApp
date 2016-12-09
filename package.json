@@ -82,7 +82,9 @@
     "webpack-merge": "^0.8.3"
   },
   "dependencies": {
+    "accounting": "^0.4.1",
     "moment": "^2.12.0",
+    "money": "^0.2.0",
     "underscore": "^1.8.3",
     "vue-resource": "^1.0.3",
     "vuex": "^2.0.0"

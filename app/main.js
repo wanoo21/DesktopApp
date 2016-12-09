@@ -3,17 +3,11 @@ import Vuex from 'vuex'
 import App from './App'
 import moment from 'moment'
 import underscore from 'underscore'
+import accounting from 'accounting'
 
 Vue.use(Vuex)
 Vue.use(underscore)
 Vue.use(require('vue-resource'))
-
-// Vue.http.interceptors.push((request, next) => {
-//     next((response) => {
-//         console.log(response)
-//         return response.json().body
-//     })
-// })
 
 const store = new Vuex.Store({
     state: {
@@ -21,6 +15,7 @@ const store = new Vuex.Store({
         selectedSource: {},
         articles: [],
         category: [],
+        fx: '',
         currentView: 'sources',
         selectedCategory: ''
     }
@@ -50,6 +45,7 @@ new Vue({
     },
     created () {
       this.$store.state.newsResource = this.$resource('https://newsapi.org/v1', {}, customActions)
+      this.$store.state.exchange = this.$resource('https://api.fixer.io/latest', {})
     },
     store,
     components: {App}
@@ -57,4 +53,7 @@ new Vue({
 
 Vue.filter('dateFromNow', function (value) {
     return moment(value).fromNow()
+})
+Vue.filter('currencyFormat', function (value, rate) {
+    return accounting.formatMoney(value, { symbol: rate, format: '%v %s' })
 })

@@ -3,13 +3,13 @@
         <header>
             <div id="input-filter">
                 <div class="btn-group">
-                    <button class="active">News</button>
-                    <button>Currency</button>
-                    <button>Weather</button>
+                    <button :class="{active: currentView == 'allSources'}" @click="switchView('allSources')">News</button>
+                    <button :disabled="!currency.rates" :class="{active: currentView == 'currency'}" @click="switchView('currency')">Currency</button>
+                    <button :class="{active: currentView == 'wheater'}" @click="switchView('wheater')">Weather</button>
                 </div>
-                <input type="search" :disabled='!sources' autofocus v-model="filterSources" placeholder="Filter all sources.">
-                <label>
-                    <select @change="selectCategory()" v-model="selectedCategory" :disabled='!sources'>
+                <input type="search" :disabled="!sources" v-if="currentView == 'allSources'" autofocus v-model="filterSources" placeholder="Filter all sources.">
+                <label v-if="currentView == 'allSources'">
+                    <select @change="selectCategory()" v-model="selectedCategory" :disabled="!sources">
                         <option :selected="!selectedCategory.length" value="">All</option>
                         <option :selected="selectedCategory == category" v-for="category in categories">{{category}}</option>
                     </select>
@@ -17,7 +17,7 @@
             </div>
         </header>
         <content>
-            <div id="sources">
+            <div id="sources" v-if="currentView == 'allSources'">
                 <div v-for="source in sources | filterBy selectedCategory 'category' | filterBy filterSources 'name'" class="source">
                     <div class="source-content">
                         <img :src="source.urlsToLogos.medium">
@@ -29,6 +29,7 @@
                     </div>
                 </div>
             </div>
+            <exchange id="sources" :currency="currency" v-if="currentView == 'currency'"></exchange>
         </content>
     </main>
 </template>
@@ -173,12 +174,15 @@
 </style>
 
 <script>
+    import exchange from './exchange'
+
     export default {
         data () {
             return {
                 filterSources: '',
                 selectedCategory: '',
-                filteredSources: []
+                filteredSources: [],
+                currentView: 'allSources'
             }
         },
         computed: {
@@ -193,6 +197,9 @@
                     }
                 })
                 return categories
+            },
+            currency () {
+                return this.$store.state.fx
             }
         },
         ready () {
@@ -212,7 +219,13 @@
             },
             selectCategory () {
                 this.$store.state.selectedCategory = this.selectedCategory
+            },
+            switchView (view) {
+                this.currentView = view
             }
+        },
+        components: {
+            exchange
         }
     }
 </script>

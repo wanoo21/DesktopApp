@@ -42,7 +42,7 @@
 <script>
   import articles from './components/articles'
   import sources from './components/sources'
-  import modal from './directives/modal'
+  import fx from 'money'
 
   export default {
     data () {
@@ -61,12 +61,20 @@
                 this.$store.state.sources = res.body.sources
             }
         })
+        this.$store.state.exchange.get({ base: 'PHP' }).then(rate => {
+            if (rate.ok) {
+                fx.rates = rate.body.rates
+                fx.base = rate.body.base
+                this.$store.state.fx = fx
+            } else {
+                console.error(rate.statusText)
+            }
+        })
     },
     methods: {},
     components: {
       articles,
-      sources,
-      modal
+      sources
     }
   }
 

@@ -13,9 +13,6 @@
                 </ul>
             </nav>
         </header>
-        <!--<footer>-->
-            <!--<p class="cp">News source from <a target="_blank" class="js-external-link" href="http://newsapi.org">NewsAPI</a></p>-->
-        <!--</footer>-->
     </aside>
     <main>
         <!--<header>-->
@@ -29,7 +26,7 @@
         <!--</header>-->
         <div id="breadcrumbs">
             <h1>{{selectedSource.name}} <small><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{selectedCategory || 'All'}}</small></h1>
-            <p v-if="selectedSource.description">{{selectedSource.description}}</p>
+            <p v-if="selectedSource.description">{{{selectedSource.description}}}</p>
         </div>
         <content>
             <div id="items">
@@ -58,7 +55,7 @@
     @import "../scss/variables";
 
     aside {
-        max-width: rem(300);
+        max-width: rem(400);
         background: $secondDark;
         @include display(flex);
         flex-direction: column;
@@ -196,8 +193,8 @@
                 padding: rem(1);
                 .item {
                     position: relative;
-                    @include span-columns(2 of 8);
-                    @include omega(4n);
+                    @include span-columns(6);
+                    @include omega(2n);
                     border-radius: 3px;
                     box-shadow: 0 0 1px $secondDark;
                     margin-bottom: 15px;
@@ -248,7 +245,7 @@
                         img {
                             border-radius: 3px 3px 0 0;
                             @include fill-parent;
-                            height: 200px;
+                            height: 300px;
                             object-fit: cover;
                         }
                     }
