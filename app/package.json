@@ -1,9 +1,9 @@
 {
-  "name": "electron-boilerplate-vue",
-  "productName": "Electron Boilerplate Vue",
+  "name": "news-app",
+  "productName": "News Desktop App",
   "version": "0.1.0",
-  "description": "An Electron + Vue.js project.",
-  "author": "Brad Stewart <me@bradstewart.co>",
+  "description": "A News app for Desktop",
+  "author": "Ion Prodan <ionprodan33@gmail.com>",
   "main": "background.js",
   "dependencies": {
     "vue": "latest"
